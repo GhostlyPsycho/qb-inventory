@@ -29,7 +29,7 @@ local function SetupShopItems(shopItems)
             if itemInfo then
                 items[slot] = {
                     name = itemInfo['name'],
-                    amount = tonumber(item.amount),
+                    amount = tonumber(item.amount) or 0,
                     info = item.info or {},
                     label = itemInfo['label'],
                     description = itemInfo['description'] or '',
@@ -40,6 +40,8 @@ local function SetupShopItems(shopItems)
                     price = item.price,
                     image = itemInfo['image'],
                     slot = slot,
+                    unlimited = item.unlimited or (item.restock == false),
+                    isShop = true,
                 }
                 slot = slot + 1
             end

@@ -350,7 +350,7 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
         end
     end
 
-    if shopInfo.items[itemInfo.slot].name ~= itemInfo.name then -- Check if item name passed is the same as the item in that slot
+    if shopInfo.items[itemInfo.slot].name ~= itemInfo.name then
         cb(false)
         return
     end
@@ -371,6 +371,11 @@ QBCore.Functions.CreateCallback('qb-inventory:server:attemptPurchase', function(
     if Player.PlayerData.money.cash >= price then
         Player.Functions.RemoveMoney('cash', price, 'shop-purchase')
         AddItem(source, itemInfo.name, amount, nil, itemInfo.info, 'shop-purchase')
+        
+        if shopInfo.items and shopInfo.items[itemInfo.slot] and shopInfo.items[itemInfo.slot].amount > 0 and not shopInfo.items[itemInfo.slot].unlimited then
+            shopInfo.items[itemInfo.slot].amount = math.max(0, shopInfo.items[itemInfo.slot].amount - amount)
+        end
+
         TriggerEvent('qb-shops:server:UpdateShopItems', shop, itemInfo, amount)
         cb(true)
     else

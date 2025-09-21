@@ -90,12 +90,14 @@
                     </div>
                     <div class="inventory-grid">
                         <div class="item-grid">
-                            <div v-for="slot in otherInventorySlots" :key="slot" class="item-slot" :data-slot="slot" @mousedown="event => handleMouseDown(event, slot, 'other')" @dragover.prevent>
+                            <div v-for="slot in otherInventorySlots" :key="slot" class="item-slot" :class="{ 'sold-out': isShopInventory && getItemInSlot(slot, 'other') && getItemInSlot(slot, 'other').amount == 0 && !getItemInSlot(slot, 'other').unlimited }" :data-slot="slot" @mousedown="event => handleMouseDown(event, slot, 'other')" @dragover.prevent>
                                 <div class="item-slot-img" v-if="getItemInSlot(slot, 'other')" v-tooltip.right-end="{content: generateTooltipContent(getItemInSlot(slot, 'other')), html: true}">
                                     <img :src="'images/' + getItemInSlot(slot, 'other').image" alt="" />
                                 </div>
                                 <div class="item-slot-amount" v-if="getItemInSlot(slot, 'other')">
-                                    <p>x{{ getItemInSlot(slot, 'other').amount }}</p>
+                                    <p v-if="getItemInSlot(slot, 'other').unlimited">++</p>
+                                    <p v-else-if="getItemInSlot(slot, 'other').amount == 0">x0</p>
+                                    <p v-else>x{{ getItemInSlot(slot, 'other').amount }}</p>
                                 </div>
                                 <div v-if="isShopInventory && getItemInSlot(slot, 'other')" class="item-price">
                                     <p>${{ getItemInSlot(slot, 'other').price }}</p>

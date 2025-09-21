@@ -216,7 +216,7 @@ const InventoryContainer = Vue.createApp({
             }
         },
         handleMouseDown(event, slot, inventory) {
-            if (event.button === 1) return; // skip middle mouse
+            if (event.button === 1) return;
             event.preventDefault();
             const itemInSlot = this.getItemInSlot(slot, inventory);
             if (event.button === 0) {
@@ -383,7 +383,8 @@ const InventoryContainer = Vue.createApp({
                     this.inventoryError(currentlyDraggingSlot);
                     return;
                 }
-                this.handlePurchase(targetSlot, currentlyDraggingSlot, currentlyDraggingItem, transferAmount);
+                const purchaseAmount = transferAmount && transferAmount > 0 ? transferAmount : 1;
+                this.handlePurchase(targetSlot, currentlyDraggingSlot, currentlyDraggingItem, purchaseAmount);
             } else {
                 this.handleItemDrop("player", targetSlot);
             }
@@ -511,9 +512,10 @@ const InventoryContainer = Vue.createApp({
         },
         async handlePurchase(targetSlot, sourceSlot, sourceItem, transferAmount) {
             try {
+                const purchaseAmount = transferAmount && transferAmount > 0 ? transferAmount : 1;
                 const response = await axios.post("https://qb-inventory/AttemptPurchase", {
                     item: sourceItem,
-                    amount: transferAmount || sourceItem.amount,
+                    amount: purchaseAmount,
                     shop: this.otherInventoryName,
                 });
                 if (response.data) {
