@@ -66,7 +66,7 @@
 
                 <div class="input-container" v-if="!isOtherInventoryEmpty">
                     <div class="input-wrapper">
-                        <input type="number" v-model="transferAmount" min="1" :placeholder="transferAmount === null ? 'amount' : ''" />
+                        <input type="number" v-model="transferAmount" min="1" step="1" @input="validateWholeNumber" :placeholder="transferAmount === null ? 'amount' : ''" />
                         <button @click="clearTransferAmount" class="clear-button">
                             <i class="fas fa-times"></i>
                         </button>

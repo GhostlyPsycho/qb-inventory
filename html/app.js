@@ -199,6 +199,14 @@ const InventoryContainer = Vue.createApp({
         clearTransferAmount() {
             this.transferAmount = null;
         },
+        validateWholeNumber(event) {
+            const value = event.target.value;
+            const numericValue = value.replace(/[^0-9]/g, '');
+            if (value !== numericValue) {
+                event.target.value = numericValue;
+                this.transferAmount = numericValue ? parseInt(numericValue) : null;
+            }
+        },
         getItemInSlot(slot, inventoryType) {
             if (inventoryType === "player") {
                 return this.playerInventory[slot] || null;
@@ -512,6 +520,7 @@ const InventoryContainer = Vue.createApp({
         },
         async handlePurchase(targetSlot, sourceSlot, sourceItem, transferAmount) {
             try {
+                // Default to 1 if transferAmount is null, undefined, or 0
                 const purchaseAmount = transferAmount && transferAmount > 0 ? transferAmount : 1;
                 const response = await axios.post("https://qb-inventory/AttemptPurchase", {
                     item: sourceItem,
